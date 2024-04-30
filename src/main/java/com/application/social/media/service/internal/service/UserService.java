@@ -55,7 +55,7 @@ public class UserService {
 		User user = userRepo.findById(id).orElse(null);	
 		if(user == null)
 		{			 
-			response = failure(StatusCode.NOT_FOUND, user, Constants.USER_IS_NOT_FOUND);
+			response = failure(StatusCode.NOT_FOUND, user, Constants.USER_NOT_FOUND);
 		}
 		else
 		{
@@ -91,7 +91,7 @@ public class UserService {
 		addUser.setBirthDate(LocalDate.parse(user.getBirthDate()));
 		addUser.setEmail(user.getEmail());
 		addUser.setContactNo(user.getContactNo());
-		addUser.setIsActive(true);
+		
 		userRepo.save(addUser);
 		return addUser;
 	}

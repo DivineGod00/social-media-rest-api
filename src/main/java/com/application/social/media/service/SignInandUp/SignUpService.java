@@ -125,7 +125,6 @@ public class SignUpService {
 		addUser.setBirthDate(LocalDate.parse(user.getBirthDate()));
 		addUser.setEmail(user.getEmail());
 		addUser.setContactNo(user.getContactNo());
-		addUser.setIsActive(true);
 		signUpRepo.save(addUser);
 		return addUser;
 	}

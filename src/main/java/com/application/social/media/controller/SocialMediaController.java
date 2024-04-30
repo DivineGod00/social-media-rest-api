@@ -2,15 +2,14 @@ package com.application.social.media.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.application.social.media.interfaces.SocialMediaApiProcessor;
-import com.application.social.media.internal.Dao.UserRepo;
 import com.application.social.media.wrapper.ClientRequest;
 import com.application.social.media.wrapper.ClientResponse;
 
@@ -43,6 +42,17 @@ public class SocialMediaController {
 		return socialMediaApiProcessor.processUser(id, httpServletRequest);
 	}
 	
+	@PostMapping(path = "/user/{userId}/posts")
+	public ClientResponse post(@RequestBody ClientRequest request, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
+	{
+		return socialMediaApiProcessor.processPost(request, userId,httpServletRequest);
+	}
+	
+	@GetMapping(path = "/user/{userId}/posts" , params ="postId")
+	public ClientResponse post(@RequestParam("postId") Long postId, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
+	{
+		return socialMediaApiProcessor.processSinglePost(postId, userId, httpServletRequest);
+	}
 	
 	
 	 

@@ -17,5 +17,8 @@ public interface SocialMediaApiProcessor {
 	
 	public ClientResponse processUser(Long id,HttpServletRequest httpServletRequest) throws Exception;
 	
+	public ClientResponse processPost(ClientRequest request,Long id, HttpServletRequest httpServletRequest) throws Exception;
+	
+	public ClientResponse processSinglePost(Long postId, Long userId,HttpServletRequest httpServletRequest) throws Exception;
 	
 }
