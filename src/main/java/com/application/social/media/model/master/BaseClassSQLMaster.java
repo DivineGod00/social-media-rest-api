@@ -33,16 +33,14 @@ public abstract class BaseClassSQLMaster implements Serializable{
     @ColumnDefault("CURRENT_TIMESTAMP")
     protected Date updatedAt;
     
-    @ColumnDefault("1")
-    @Column(nullable = true )
-    protected Long createdBy;
-
-    
-    @Column(nullable = true)
-    protected Long updatedBy;
-    
-    @NotNull
-	@Column(columnDefinition = "boolean default true")
-	protected Boolean isActive;
+//    @ColumnDefault("1")
+//  @Column(nullable = true )
+//    protected Long createdBy;    
+//    @Column(nullable = true)
+//    protected Long updatedBy;
+//    
+//    @NotNull
+//	@Column(columnDefinition = "boolean default true")
+//	protected Boolean isActive;
 
 }
