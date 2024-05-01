@@ -11,7 +11,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,11 +18,12 @@ import com.application.social.media.Dao.SignInRepo;
 import com.application.social.media.Dao.SignUpRepo;
 import com.application.social.media.common.methods.CommonUtilities;
 import com.application.social.media.dto.signUp.SignUpDto;
-import com.application.social.media.dto.user.UserDto;
 import com.application.social.media.model.master.User;
 import com.application.social.media.model.master.UserCredentials;
+import com.application.social.media.service.Email.EmailServiceMethod;
 import com.application.social.media.wrapper.ClientResponse;
 import com.application.social.media.wrapper.StatusCode;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
@@ -39,6 +39,9 @@ public class SignUpService {
 	
 	@Autowired
 	private SignInRepo signInRepo;
+	
+	@Autowired
+	private EmailServiceMethod emailServiceMethod;
 	
 	
 	public ClientResponse processSignUp(SignUpDto request, HttpServletRequest httpServletRequest)throws Exception 
@@ -101,12 +104,13 @@ public class SignUpService {
 				User userRequest = addUser(request);
 				
 				UserCredentials ucSave = addCredentails(request);
-				URI location = ServletUriComponentsBuilder.fromPath("localhost:8080/social-media/user")
+				URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 						.query("id={id}")
 						.buildAndExpand(userRequest.getId())
 						.toUri();  
 				logger.info("path "+location);
 				data.put("url", location.toString());
+				
 				return success(data,"User Saved Successfully");
 			}
 			
@@ -123,7 +127,7 @@ public class SignUpService {
 		User addUser = new User();
 		addUser.setName(user.getName());
 		addUser.setBirthDate(LocalDate.parse(user.getBirthDate()));
-		addUser.setEmail(user.getEmail());
+		addUser.setEmail(emailServiceMethod.sendMail(user.getEmail()));
 		addUser.setContactNo(user.getContactNo());
 		signUpRepo.save(addUser);
 		return addUser;
