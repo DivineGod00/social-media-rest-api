@@ -64,11 +64,11 @@ public class CommonUtilities {
 		UserCredentials credentials = userCredentialsRepo.findByUsernameAndPassword(name, password);
 		if (credentials != null && name.equals(credentials.getUsername())
 				&& password.equals(credentials.getPassword())) {
-			logger.info("--------- Matched Credentials --------");
+			logger.info("--------- Credentials Matched --------");
 			return true;
 		}
 
-		logger.info("---------- Not Matched Credentials ---------");
+		logger.info("------- Credentials Not Matched --------");
 		return false;
 	}
 	public boolean checkingCredentials(String name, String password) throws Exception {
@@ -106,7 +106,7 @@ public class CommonUtilities {
 	
 	        User phno = signUpRepo.findByContactNo(mobileNo);
 	        if (phno != null && mobileNo.equals(phno.getContactNo())) {
-	            logger.info("------ Mobile Matched Try with other ------");
+	            logger.info("------ Mobile Number Matched Try with other ------");
 	            return false;
 	        } else {
 	      
