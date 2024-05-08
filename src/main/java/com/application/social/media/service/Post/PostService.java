@@ -15,9 +15,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.application.social.media.Dao.PostRepo;
 import com.application.social.media.Dao.SignInRepo;
+import com.application.social.media.common.methods.CommonUtilities;
 import com.application.social.media.dto.post.PostDto;
-import com.application.social.media.model.master.Posts;
-import com.application.social.media.model.master.UserCredentials;
+import com.application.social.media.model.master.posts.Posts;
+import com.application.social.media.model.master.users.UserCredentials;
 import com.application.social.media.wrapper.ClientResponse;
 import com.application.social.media.wrapper.Constants;
 import com.application.social.media.wrapper.StatusCode;
@@ -57,6 +58,49 @@ public class PostService {
 		}
 		return failure(StatusCode.NOT_FOUND, null,"all data is null");
 	}
+	
+	public ClientResponse  processSinglePost(Long postId, Long userId, HttpServletRequest httpServletRequest) throws Exception
+	{
+		ClientResponse response = new ClientResponse();
+		Map<String,String> data=new HashMap<>();
+		Map<String,Object> userData=new HashMap<>();
+		
+		
+		UserCredentials user = signInRepo.findById(userId).orElse(null);
+		if (user == null) {
+		        response = failure(StatusCode.NOT_FOUND, null, Constants.USER_NOT_FOUND);
+		        return response;
+		    
+		}
+		Posts post = postRepo.findById(postId).orElse(null);
+	    if (post == null) {
+	        response = failure(StatusCode.NOT_FOUND, null, Constants.POST_NOT_FOUND);
+	        return response;
+	        
+	    }
+	    if (!post.getUserId().getId().equals(userId)) {
+	        response = failure(StatusCode.NOT_FOUND, null, Constants.POST_NOT_FOUND_FOR_THIS_USER);
+	        return response;
+	    }
+	    
+	    data.put("name", post.getUserId().getUserId().getName());
+	    data.put("username", post.getUserId().getUsername());
+	    data.put("description", post.getDescription());
+	    data.put("likes", post.getLikes().toString());
+	    data.put("comments", post.getComments().toString());
+	    data.put("shares", post.getShares().toString());
+	   
+	    PostDto posts = CommonUtilities.extractObject(data,PostDto.class);
+	    
+	    logger.info("post : "+posts);
+	    
+	   
+	    
+	   
+	    response = success(posts, "Successfully Fetched.");
+		return response;
+	}
+	
 	
 	private Posts postData(PostDto post, Long id)
 	{

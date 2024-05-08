@@ -29,36 +29,42 @@ public class SocialMediaController {
 	private EmailService emailService;
 	
 	@PostMapping("/signup")
-	public ClientResponse addUser(@RequestBody ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
+	private ClientResponse addUser(@RequestBody ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
 	{
 		return socialMediaApiProcessor.processSignUp(request, httpServletRequest);
 	}
 	
 	
 	@PostMapping("/signIn")
-	public ClientResponse login(@RequestBody ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
+	private ClientResponse login(@RequestBody ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
 	{
 		return socialMediaApiProcessor.processSignIn(request, httpServletRequest);
 	}
 	
-	@PostMapping(path = "/user" , params ="id")
-	public ClientResponse user(@RequestParam("id") Long id,HttpServletRequest httpServletRequest) throws Exception
+	@GetMapping(path = "/signIn/user" , params ="id")
+	private  ClientResponse user(@RequestParam("id") Long id,HttpServletRequest httpServletRequest) throws Exception
 	{
 		return socialMediaApiProcessor.processUser(id, httpServletRequest);
 	}
 	
 	@PostMapping(path = "/user/{userId}/posts")
-	public ClientResponse post(@RequestBody ClientRequest request, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
+	private ClientResponse post(@RequestBody ClientRequest request, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
 	{
 		return socialMediaApiProcessor.processPost(request, userId,httpServletRequest);
 	}
 	
 	@GetMapping(path = "/user/{userId}/posts" , params ="postId")
-	public ClientResponse post(@RequestParam("postId") Long postId, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
+	private ClientResponse post(@RequestParam("postId") Long postId, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
 	{
 		return socialMediaApiProcessor.processSinglePost(postId, userId, httpServletRequest);
 	}
 	
+	@PostMapping(path = "/user/post/likes")
+	private ClientResponse likes(@RequestParam Long userId, @RequestParam Long postId,HttpServletRequest httpServletRequest) throws Exception
+	{
+		return socialMediaApiProcessor.processLikes(userId, postId, httpServletRequest);
+	}
+
 	@PostMapping("/sendMail")
     public String
     sendMail(@RequestBody EmailDto details)
@@ -68,16 +74,6 @@ public class SocialMediaController {
  
         return status;
     }
-	
-	 @PostMapping("/sendMailWithAttachment")
-	    public String sendMailWithAttachment(
-	        @RequestBody EmailDto details)
-	    {
-	        String status
-	            = emailService.sendMailWithAttachment(details);
-	 
-	        return status;
-	    }
 	
 	 
 	

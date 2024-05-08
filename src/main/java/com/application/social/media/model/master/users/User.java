@@ -1,7 +1,8 @@
-package com.application.social.media.model.master;
+package com.application.social.media.model.master.users;
 
 import java.time.LocalDate;
 
+import com.application.social.media.model.master.BaseClassSQLMaster;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

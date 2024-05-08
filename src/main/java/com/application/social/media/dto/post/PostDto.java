@@ -19,5 +19,10 @@ import lombok.NoArgsConstructor;
 public class PostDto {
 
 	private String description;
+	private Long likes;
+	private Long comments;
+	private Long share;
+	private String name;
+	private String username;
 	
 }

@@ -17,8 +17,8 @@ import com.application.social.media.common.methods.CommonUtilities;
 import com.application.social.media.dto.signIn.SignInDto;
 import com.application.social.media.internal.Dao.UserCredentialsRepo;
 import com.application.social.media.internal.Dao.UserRepo;
-import com.application.social.media.model.master.User;
-import com.application.social.media.model.master.UserCredentials;
+import com.application.social.media.model.master.users.User;
+import com.application.social.media.model.master.users.UserCredentials;
 import com.application.social.media.wrapper.ClientRequest;
 import com.application.social.media.wrapper.ClientResponse;
 import com.application.social.media.wrapper.Constants;
@@ -55,11 +55,11 @@ public class SignInService {
 		{
 			UserCredentials lm = userCredentialsRepo.findByUsernameAndPassword(userCreden.getUsername(), userCreden.getPassword());
 			user = userRepo.findById(lm.getUserId().getId()).orElse(null);
-			URI location = ServletUriComponentsBuilder.fromPath("localhost:8080/social-media/user")
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+					.path("/user")
 					.query("id={id}")
 					.buildAndExpand(user.getId())
 					.toUri();  
-			logger.info("path "+location.getClass());
 			data.put("url", location.toString());
 			return success(data,"Successfully fetched..");	
 		}

@@ -3,8 +3,8 @@ package com.application.social.media.Dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.application.social.media.model.master.User;
-import com.application.social.media.model.master.UserCredentials;
+import com.application.social.media.model.master.users.User;
+import com.application.social.media.model.master.users.UserCredentials;
 
 @Repository
 public interface SignUpRepo  extends JpaRepository<User , Long>{

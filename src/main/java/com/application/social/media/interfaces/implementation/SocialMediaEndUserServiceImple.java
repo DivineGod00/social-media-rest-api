@@ -4,6 +4,9 @@ package com.application.social.media.interfaces.implementation;
 import static com.application.social.media.common.methods.CommonUtilities.failure;
 import static com.application.social.media.common.methods.CommonUtilities.success;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,10 @@ import com.application.social.media.dto.post.PostDto;
 import com.application.social.media.dto.signUp.SignUpDto;
 import com.application.social.media.interfaces.SocialMediaApiProcessor;
 import com.application.social.media.internal.Dao.UserRepo;
-import com.application.social.media.model.master.Posts;
-import com.application.social.media.model.master.User;
-import com.application.social.media.model.master.UserCredentials;
+import com.application.social.media.model.master.posts.Posts;
+import com.application.social.media.model.master.users.User;
+import com.application.social.media.model.master.users.UserCredentials;
+import com.application.social.media.service.Post.LikePostService;
 import com.application.social.media.service.Post.PostService;
 import com.application.social.media.service.SignInandUp.SignInService;
 import com.application.social.media.service.SignInandUp.SignUpService;
@@ -34,11 +38,16 @@ import jakarta.servlet.http.HttpServletRequest;
 public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 
 	private static final  Logger logger = LoggerFactory.getLogger(SocialMediaEndUserServiceImple.class);
-	
 
-	
 	@Autowired
 	private SignInService signInService;
+	
+	
+	@Autowired
+	private LikePostService likePostService;
+	
+	@Autowired
+	private CommonUtilities commonUtils;
 	
 	@Autowired
 	private SignUpService signUpService;
@@ -48,18 +57,11 @@ public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 	
 	@Autowired
 	private PostService postService;
-	
-	@Autowired
-	private SignInRepo signInRepo;
-	
-	@Autowired
-	private PostRepo postRepo;
-	
-	
+
 	@Override
 	public ClientResponse processSignUp(ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
 	{
-		logger.info("--- add user api initiated ---");
+		logger.info("--- Sign-Up api initiated ---");
 		ClientResponse response = null;
 		logger.info("request : "+CommonUtilities.convertObjectToJsonString(request));
 		SignUpDto user = CommonUtilities.extractObject(request.getData(), SignUpDto.class);
@@ -75,20 +77,21 @@ public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 		return response;
 		
 	}
-	
-	
-	
-	
+
 	@Override
 	public ClientResponse processSignIn(ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
 	{
-		logger.info("--- login api initiated ---");
+		logger.info("--- Sign In api initiated ---");
 		ClientResponse response = null;
-		response = signInService.processSignIn(request, httpServletRequest);
-		
-		
-		
-		
+		try {
+			response = signInService.processSignIn(request, httpServletRequest);
+			logger.info("Data ===> "+response);
+		}
+		catch(Exception e)
+		{
+			response = failure(StatusCode.SOME_ERROR_OCCURED, e.getMessage(),
+					Constants.SOME_ERROR_OCCURED);
+		}
 		return response;
 	}
 	
@@ -119,7 +122,7 @@ public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 	@Override
 	public ClientResponse processPost(ClientRequest request,Long id, HttpServletRequest httpServletRequest) throws Exception
 	{
-		logger.info("--- add post api initiated ---");
+		logger.info("--- Post api initiated ---");
 		ClientResponse response = null;	
 		logger.info("request : "+CommonUtilities.convertObjectToJsonString(request));
 		PostDto post = CommonUtilities.extractObject(request.getData(),PostDto.class);
@@ -138,25 +141,35 @@ public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 	@Override
 	public ClientResponse processSinglePost(Long postId, Long userId, HttpServletRequest httpServletRequest) throws Exception
 	{
-		ClientResponse response = new ClientResponse();
-		
-		UserCredentials user = signInRepo.findById(userId).orElse(null);
-		if (user == null) {
-		        response = failure(StatusCode.NOT_FOUND, null, Constants.USER_NOT_FOUND);
-		        return response;
-		    
+		ClientResponse response = null;
+		try {
+			response = postService.processSinglePost(postId, userId, httpServletRequest);
+			logger.info("Data ===> "+response);
 		}
-		Posts post = postRepo.findById(postId).orElse(null);
-	    if (post == null) {
-	        response = failure(StatusCode.NOT_FOUND, null, Constants.POST_NOT_FOUND);
-	        return response;
-	        
-	    }
-	    if (!post.getUserId().getId().equals(userId)) {
-	        response = failure(StatusCode.NOT_FOUND, null, Constants.POST_NOT_FOUND_FOR_THIS_USER);
-	        return response;
-	    }
-	    response = success(post, "Successfully Fetched.");
+		catch(Exception e)
+		{
+			response = failure(StatusCode.SOME_ERROR_OCCURED, e.getMessage(),
+					Constants.SOME_ERROR_OCCURED);
+		}
 		return response;
+	}
+	
+	@Override
+	public ClientResponse processLikes(Long userId, Long postId,HttpServletRequest httpServletRequest) throws Exception
+	{
+		logger.info("Likes Api Initiated");
+		ClientResponse response = null;
+		try {
+			response = likePostService.processLike(userId, postId, httpServletRequest);
+			logger.info("Data ===> "+response);
+		}
+		catch(Exception e)
+		{
+			response = failure(StatusCode.SOME_ERROR_OCCURED, e.getMessage(),
+					Constants.SOME_ERROR_OCCURED);
+		}
+		return response;
+	
+		
 	}
 }

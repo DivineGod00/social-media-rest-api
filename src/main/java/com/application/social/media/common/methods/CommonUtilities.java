@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.application.social.media.Dao.SignUpRepo;
 import com.application.social.media.internal.Dao.UserCredentialsRepo;
-import com.application.social.media.model.master.User;
-import com.application.social.media.model.master.UserCredentials;
+import com.application.social.media.model.master.users.User;
+import com.application.social.media.model.master.users.UserCredentials;
 import com.application.social.media.wrapper.ClientResponse;
 import com.application.social.media.wrapper.Constants;
 import com.application.social.media.wrapper.StatusCode;

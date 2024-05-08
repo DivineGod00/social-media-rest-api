@@ -2,7 +2,7 @@ package com.application.social.media.dto.user;
 
 import java.time.LocalDate;
 
-import com.application.social.media.model.master.User;
+import com.application.social.media.model.master.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

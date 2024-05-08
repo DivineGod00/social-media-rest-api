@@ -1,7 +1,9 @@
-package com.application.social.media.model.master;
+package com.application.social.media.model.master.posts;
 
-import java.time.LocalDate;
+import org.hibernate.annotations.ColumnDefault;
 
+import com.application.social.media.model.master.BaseClassSQLMaster;
+import com.application.social.media.model.master.users.UserCredentials;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -37,4 +39,18 @@ public class Posts  extends BaseClassSQLMaster{
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid")
 	private UserCredentials userId;
+	
+	@ColumnDefault("0")
+	@Column(name = "likes")
+	private Long likes;
+	
+	@ColumnDefault("0")
+	@Column(name = "comments")
+	private Long comments;
+	
+	@ColumnDefault("0")
+	@Column(name = "shares")
+	private Long shares;
+	
+	
 }

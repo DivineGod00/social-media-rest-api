@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+           <pattern>%X{applicationName} %d{HH:mm:ss.SSS , Asia/Kolkata} [%thread] %highlight(%-5level) %c{1}:%L - %msg%n</pattern>
+
+        </encoder>
+    </appender>
+    <appender name="SOCIAL_MEDIA" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.home}/logs/SOCIAL_MEDIA_LOG.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.base}/logs/SOCIAL_MEDIA.%d{yyyy-MM-dd}.gz</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+           <pattern>%X{applicationName} %d{HH:mm:ss.SSS , Asia/Kolkata} [%thread] %highlight(%-5level) %c{1}:%L - %msg%n</pattern>
+
+        </encoder>
+    </appender>
+    <appender name="ErrorFile-Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${catalina.home}/logs/SOCIAL_MEDIA_ERROR.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.base}/logs/Errors/SOCIAL_MEDIA_ERROR.%d{yyyy-MM-dd}.gz</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%X{applicationName} %d{HH:mm:ss.SSS , Asia/Kolkata} [%thread] %highlight(%-5level) %c{1}:%L - %msg%n</pattern>
+
+            <outputPatternAsHeader>true</outputPatternAsHeader>
+        </encoder>
+    </appender>
+    <logger name="com.application.social.media" additivity="false" level="INFO">
+        <appender-ref ref="SOCIAL_MEDIA"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ErrorFile-Appender" />
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="SOCIAL_MEDIA"/>
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="ErrorFile-Appender" />
+    </root>
+</configuration>
