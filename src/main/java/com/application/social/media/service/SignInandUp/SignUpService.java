@@ -55,9 +55,9 @@ public class SignUpService {
 			{
 				
 				logger.info("Details of User : "+request);
-				if(request.getName().length() < 2)
+				if(request.getFirstName().length() < 2 || request.getLastName().length() < 2)
 				{			 
-					data.put("error", request.getName()+" Name char is more than 2.");
+					data.put("error", request.getFirstName()+" Name char is more than 2.");
 					return failure(StatusCode.VALIDATION_ERROR, data, "Name char is more than 2.");
 				}
 				
@@ -125,9 +125,11 @@ public class SignUpService {
 	private User addUser(SignUpDto user)
 	{
 		User addUser = new User();
-		addUser.setName(user.getName());
+		addUser.setName(user.getFirstName()+ " "+user.getLastName());
+//		LocalDate birthDate = LocalDate.parse(user.getBirthDate());
 		addUser.setBirthDate(LocalDate.parse(user.getBirthDate()));
-		addUser.setEmail(emailServiceMethod.sendMail(user.getEmail()));
+		emailServiceMethod.sendMail(user.getEmail());
+		addUser.setEmail(user.getEmail());
 		addUser.setContactNo(user.getContactNo());
 		signUpRepo.save(addUser);
 		return addUser;
@@ -138,7 +140,7 @@ public class SignUpService {
 		UserCredentials uc = new UserCredentials();
 		uc.setUsername(user.getUsername());
 		uc.setPassword(user.getPassword());
-		User us = signUpRepo.findByName(user.getName());
+		User us = signUpRepo.findByName(user.getFirstName()+ " "+user.getLastName());
 		
 		uc.setUserId(us);
 		
@@ -190,8 +192,7 @@ public class SignUpService {
 		return true;
 	}
 	private boolean usernameExist(String username) throws Exception {
-		
-		
+
         UserCredentials name = signInRepo.findByUsername(username);
         if (name != null && username.equals(name.getUsername())) {
             logger.info("------ Username Matched Try with other ------");

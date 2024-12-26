@@ -42,6 +42,8 @@ public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 	@Autowired
 	private SignInService signInService;
 	
+	@Autowired
+	private SignInRepo repo;
 	
 	@Autowired
 	private LikePostService likePostService;
@@ -105,7 +107,7 @@ public class SocialMediaEndUserServiceImple implements SocialMediaApiProcessor{
 	public ClientResponse processUser(Long id,HttpServletRequest httpServletRequest) throws Exception
 	{
 		ClientResponse response = new ClientResponse();
-		User user = userRepo.findById(id).orElse(null);	
+		UserCredentials user = repo.findById(id).orElse(null);	
 		if(user == null)
 		{			 
 			response = failure(StatusCode.NOT_FOUND, user, Constants.USER_NOT_FOUND);

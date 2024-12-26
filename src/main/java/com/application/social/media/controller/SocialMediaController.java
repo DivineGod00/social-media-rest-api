@@ -19,62 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("/social-media")
+@RequestMapping("/v1")
 public class SocialMediaController {
 
-	@Autowired
-	private SocialMediaApiProcessor socialMediaApiProcessor;
-	
-	@Autowired 
-	private EmailService emailService;
-	
-	@PostMapping("/signup")
-	private ClientResponse addUser(@RequestBody ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
-	{
-		return socialMediaApiProcessor.processSignUp(request, httpServletRequest);
-	}
-	
-	
-	@PostMapping("/signIn")
-	private ClientResponse login(@RequestBody ClientRequest request,HttpServletRequest httpServletRequest) throws Exception
-	{
-		return socialMediaApiProcessor.processSignIn(request, httpServletRequest);
-	}
-	
-	@GetMapping(path = "/signIn/user" , params ="id")
-	private  ClientResponse user(@RequestParam("id") Long id,HttpServletRequest httpServletRequest) throws Exception
-	{
-		return socialMediaApiProcessor.processUser(id, httpServletRequest);
-	}
-	
-	@PostMapping(path = "/user/{userId}/posts")
-	private ClientResponse post(@RequestBody ClientRequest request, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
-	{
-		return socialMediaApiProcessor.processPost(request, userId,httpServletRequest);
-	}
-	
-	@GetMapping(path = "/user/{userId}/posts" , params ="postId")
-	private ClientResponse post(@RequestParam("postId") Long postId, @PathVariable Long userId,HttpServletRequest httpServletRequest) throws Exception
-	{
-		return socialMediaApiProcessor.processSinglePost(postId, userId, httpServletRequest);
-	}
-	
-	@PostMapping(path = "/user/post/likes")
-	private ClientResponse likes(@RequestParam Long userId, @RequestParam Long postId,HttpServletRequest httpServletRequest) throws Exception
-	{
-		return socialMediaApiProcessor.processLikes(userId, postId, httpServletRequest);
-	}
-
-	@PostMapping("/sendMail")
-    public String
-    sendMail(@RequestBody EmailDto details)
-    {
-        String status
-            = emailService.sendSimpleMail(details);
- 
-        return status;
-    }
-	
-	 
 	
 }

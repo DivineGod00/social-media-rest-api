@@ -86,7 +86,7 @@ public class LikePostService {
 	  	  data.put("message", "Like By "+user.getUsername());
 	  	 
 	    }
-	    else if(postID.getPostId() == post.getId() && postID.getUserId() == user.getId())
+	    else if(postID.getPostId() == post.getId() || postID.getUserId() == user.getId())
 	    {
 	    	Long likes = post.getLikes();
 		    Long like = likes-1;
